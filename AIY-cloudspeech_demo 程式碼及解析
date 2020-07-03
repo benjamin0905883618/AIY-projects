@@ -1,0 +1,62 @@
+import argparse
+#https://docs.python.org/zh-tw/3/howto/argparse.html，用於提示指令及尋找指令
+import locale
+import logging
+from aiy.board import Board,Led
+from aiy.cloudspeech import CloudSpeechClient
+from gtts import gTTS
+from pydub import AudioSegment
+from aiy.voice import audio
+#把字改轉換成mp3檔，再從mp3檔轉成wav檔輸出
+def say(text):
+    tts = gTTS(text)
+    tts.save('output.mp3')
+    sound = AudioSegment.from_mp3('output.mp3')
+    sound.export('output.wav',format = 'wav')
+    audio.play_wav('output.wav')
+#提供關鍵字供語音套件參考
+def get_hints(language_code):
+    if language_code.startswith('en_'):
+        return('turn on the light','turn off the light','blink the light','goodbye')
+    return None
+def locale_language():
+    language,_ = locale.getdefaultlocale()
+    return language;
+def main():
+    logging.basicConfig(level = logging.DEBUG)#系統提醒階段分為debug->info->waring->error->critical，越往左問題越小，往右會忽略所有左方訊息;資料來源:https://reurl.cc/62nVVM
+    say('test')
+    parser = argparse.ArgumentParser(description = 'Assistant service example.')
+    parser.add_argument('--language',default = locale_language())
+    #增加一個叫做language的指令放在default下，並且做loacle_language
+    args = parser.parse_args()
+
+    logging.info('Initializing for language %s...',args.language)
+    #輸出目前使用語言
+    hints = get_hints(args.language)
+    client = CloudSpeechClient()
+    with Board() as board:
+        while True:
+            if hints:
+                logging.info('Say something,e.g. %s.'%','.join(hints))
+            else:
+                logging.info('Say something.')
+            text = client.recognize(language_code = args.language,hint_phrases = hints)
+            if text is None:
+                logging.info('You said nothing.')
+                continue
+            logging.info('You said : "%s"'%text)
+            text = text.lower()
+            if 'turn on the light' in text:
+                board.led.state = Led.ON
+                say('tuen on the light')
+            elif 'turn off the light' in text:
+                board.led.state = Led.OFF
+                say('tuen off the light')
+            elif 'blink the light' in text:
+                board.led.state = Led.BLINK
+            elif 'goodbye' in text:
+                say('byebye')
+if __name__ == '__main__':
+    main()
+                
+    
