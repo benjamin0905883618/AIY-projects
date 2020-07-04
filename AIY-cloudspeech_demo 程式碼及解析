@@ -1,5 +1,6 @@
 import argparse
 #https://docs.python.org/zh-tw/3/howto/argparse.html，用於提示指令及尋找指令
+#https://blog.csdn.net/daodanxiansheng/article/details/82312981,API運作原理
 import locale
 import logging
 from aiy.board import Board,Led
