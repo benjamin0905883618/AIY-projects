@@ -1,0 +1,20 @@
+from __future__ import print_function
+
+from IPython import display
+from matplotlib import cm
+from matplotlib import gridspec
+from matplotlib import pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+import tensorflow as tf
+from tensorflow.python.data import Dataset
+
+#需先安裝缺少的模組套件
+#可能會出現DLL的問題，依照網站資訊下載cuDNN
+
+#新版tf.logging.set_verbosity 已更改為 tf.compat.v1.logging.set_verbosity
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+pd.options.display.max_rows = 10
+pd.options.display.float_format = '{:.1f}}'.format
+
