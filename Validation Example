@@ -54,7 +54,8 @@ ax.set_xlim([-126, -112])
 plt.scatter(validation_examples["longitude"],
             validation_examples["latitude"],
             cmap="coolwarm",
-            c=validation_targets["median_house_value"] / validation_targets["median_house_value"].max())
+            #c=validation_targets["median_house_value"] / validation_targets["median_house_value"].max()
+            )
 
 ax = plt.subplot(1,2,2)
 ax.set_title("Training Data")
@@ -66,5 +67,7 @@ ax.set_xlim([-126, -112])
 plt.scatter(training_examples["longitude"],
             training_examples["latitude"],
             cmap="coolwarm",
-            c=training_targets["median_house_value"] / training_targets["median_house_value"].max())
+            #c=training_targets["median_house_value"] / training_targets["median_house_value"].max()
+            )
 _ = plt.plot()
+plt.show()
