@@ -1,0 +1,29 @@
+from  __future__  import print_function
+from IPython import display
+import xlwt
+import pandas as pd
+from flask import Flask, request, render_template
+pd.options.display.max_rows = 10
+student_score_data = pd.read_excel("student_score_data_20200804.xlsx" ,sep = ",")
+def find_name(database,name):
+    student_name = database["name"]
+    for i in range(len(student_name)):
+        if student_name[i] == name:
+            return i
+app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return render_template('home.html')
+@app.route('/signin', methods=['GET'])
+@app.route('/signin', methods=['POST'])
+def signin():
+    username = request.form['username']
+    password = request.form['password']
+    num = find_name(student_score_data,username)
+    if float(password) == student_score_data["password"][num]:
+        return render_template('signin-ok.html', username=username,score = student_score_data["score"][num])
+    return render_template('home.html', message='Bad username or password', username=username)
+if __name__ == '__main__':
+    app.run(host='127.0.0.1',port=8000)
+#需自行寫上home、signin的html置於新創的template資料夾內，且home頁面必須有輸入項目
+#電腦內必須包含一個excel檔案供讀取及修改
