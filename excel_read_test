@@ -1,0 +1,39 @@
+from  __future__  import print_function
+from IPython import display
+#from openpyxl import load_workbook
+import xlwt
+import pandas as pd
+pd.options.display.max_rows = 10
+#pd.options.display.float_format = "{:.1f}".format
+
+student_score_data = pd.read_excel("student_score_data.xls" ,sep = ",")
+#print()
+#print(student_score_data["name"])
+
+def find_name(database,name):
+    student_name = database["name"]
+    for i in range(len(student_name)):
+        if student_name[i] == name:
+            return i
+while True:
+    test = input("請輸入姓名或者0以結束查詢 : ")
+    if test == "0":
+        break
+    num = find_name(student_score_data,test)
+    #print(student_score_data["password"][num])
+    if student_score_data["password"][num]:
+        password = input("請輸入密碼 : ")
+        if float(password) == student_score_data["password"][num]:
+            print("您的分數是 : %.1f"%student_score_data["score"][num])
+        else:
+            print("密碼錯誤 ")
+    else:
+        student_score_data["password"][num] = input("新創帳戶請輸入密碼 : ")
+        print(student_score_data["password"][num])
+        test = input("請再次輸入密碼 : ")
+        if float(test) == student_score_data["password"][num]:
+            print("更改密碼完成")
+            student_score_data.to_excel("student_score_data.xls",na_rep = False)
+        else:
+            print("密碼驗證失敗")
+
