@@ -37,7 +37,9 @@ for i in range(iteration):
   b_grad = 0
   w_grad = 0
   for n in range(len(x_data)):
+    #對b做偏微分，w是常數
     b_grad = b_grad - 2 * (y_data[n] - b - w * x_data[n]) * 1
+    #對w做偏微分，b是常數
     w_grad = w_grad - 2 * (y_data[n] - b - w * x_data[n]) * x_data[n]
   """
   #Gradient Descent
